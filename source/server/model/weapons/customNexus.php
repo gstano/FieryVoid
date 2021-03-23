@@ -2156,7 +2156,11 @@ class NexusAutocannonDefender extends Particle{
 				$movement = $shooter->getLastTurnMovement($fireOrder->turn);
 				$pos = mathlib::hexCoToPixel($movement->position); //launch hex
 				$sourceBearing = $interceptingShip->getBearingOnPos($pos);				
-			}else{ //direct fire
+			}else if ($firingWeapon->laser) {
+				$sourceBearing = $interceptingShip->getBearingOnUnit($shooter);
+				$other = 1;
+			}
+			else{ //direct fire
 				$sourceBearing = $interceptingShip->getBearingOnUnit($shooter);
 			}
 			if (!mathlib::isInArc($sourceBearing, $this->startArc, $this->endArc)) return false;
@@ -3040,7 +3044,6 @@ class NexusAssaultCannon extends Weapon{
         public $trailLength = 10;//not used for Laser animation?...
         public $projectilespeed = 12;//not used for Laser animation?...
         public $animationExplosionScaleArray = array(1=>0.3, 2=>2);//not used for Laser animation?...
-	
 	
 	//actual weapons data
         public $priorityArray = array(1=>7, 2=>1);
@@ -5220,7 +5223,7 @@ Done as: kind of offensive mode - player needs to pick hex to fire at. Animated 
 All appropriate fire orders will get an interception set up before other intercepts are declared.
 If weapon is left to its own devices it will simply provide a single interception (...if game allows non-1-per-turn weapon to be intercepting in the first place!)
 */
-class PlasmaWeb extends Weapon{
+class PlasmaWeb extends Weapon implements DefensiveSystem{
         public $name = "PlasmaWeb";
         public $displayName = "Plasma Web";
 		public $iconPath = "PlasmaWeb.png";
@@ -5234,6 +5237,8 @@ class PlasmaWeb extends Weapon{
         public $projectilespeed = 12;
         public $animationWidth = 10;
         public $trailLength = 10;
+
+        public $output = 2;
 
         public $ballistic = false;
         public $hextarget = false; //for technical reasons this proved hard to do
@@ -5258,8 +5263,8 @@ class PlasmaWeb extends Weapon{
 
         function __construct($armour, $maxhealth, $powerReq, $startArc, $endArc){
 		        //maxhealth and power reqirement are fixed; left option to override with hand-written values
-            if ( $maxhealth == 0 ) $maxhealth = 2;
-            if ( $powerReq == 0 ) $powerReq = 1;
+            if ( $maxhealth == 0 ) $maxhealth = 4;
+            if ( $powerReq == 0 ) $powerReq = 2;
             parent::__construct($armour, $maxhealth, $powerReq, $startArc, $endArc);
         }
 		
@@ -5269,10 +5274,27 @@ class PlasmaWeb extends Weapon{
             $this->data["Special"] .= "<br>Will affect uninterceptable weapons.";
         }
 
+
+
+        public function getDefensiveType()
+        {
+            return "Shield";
+        }
+		
+        public function getDefensiveHitChangeMod($target, $shooter, $pos, $turn, $weapon){
+
+            return 0;
+        }		
+
+
+
+
     public function getDefensiveDamageMod($target, $shooter, $pos, $turn, $weapon){
-        $output = 2;
+        $output = $this->output;
+        $output += $this->outputMod; //outputMod itself is negative!
+
 	//Affects only Antimatter, Laser, and Particle weapons
-	//if($weapon->weaponClass == 'Laser' || $weapon->weaponClass == 'Particle' || $weapon->weaponClass == 'Antimatter' || $weapon->weaponClass == 'Ramming') $output = 2;
+	//if($weapon->weaponClass == 'Laser' || $weapon->weaponClass == 'Particle' || $weapon->weaponClass == 'Antimatter') $output = 2;
         return $output;
     }
 	        
@@ -5348,7 +5370,7 @@ class PlasmaBlast extends Weapon{
 		
 		public $range = 3;
 		public $loadingtime = 1;
-//		public $hextarget = true;
+		public $hextarget = true;
 		
 		public $flashDamage = true;
 		public $priority = 1;
@@ -5370,62 +5392,107 @@ class PlasmaBlast extends Weapon{
         public $fireControl = array(50, null, null); // fighters, <mediums, <capitals
 
 
-
-
-public function calculateHitBase($gamedata, $fireOrder)
+    public function calculateHitBase($gamedata, $fireOrder)
     {
-        $fireOrder->needed = 100; //100% chance of hitting everything on target hex
-        $fireOrder->updated = true;
-    } 
-
- public function fire($gamedata, $fireOrder){
-        $this->changeFiringMode($fireOrder->firingMode);//changing firing mode may cause other changes, too!
-        $shooter = $gamedata->getShipById($fireOrder->shooterid); //so we know which ship is firing, this is useful
-
-		if ($fireOrder->targetid != -1) { //make weapon target hex rather than unit
-            $targetship = $gamedata->getShipById($fireOrder->targetid);
-            //insert correct target coordinates: CURRENT  target position
-            $position = $targetship->getCoPos(); 
-            $fireOrder->x = $position["x"];
-            $fireOrder->y = $position["y"];
-            $fireOrder->targetid = -1; 
-        }
-
-		//roll to hit - we'll make a regular roll (irrelevant as hit is automatic, but we need to mark SOME number anyway):
-		$rolled = Dice::d(100);
-		$fireOrder->rolled = $rolled;
-
-		//deal damage!
-        $target = new OffsetCoordinate($fireOrder->x, $fireOrder->y);
-        $ships1 = $gamedata->getShipsInDistance($target); //all ships on target hex
-        foreach ($ships1 as $targetShip) if ($targetShip instanceOf FighterFlight) {
-
-            $this->AOEdamage($targetShip, $shooter, $fireOrder, $gamedata);
-        }
+		$fireOrder->needed = 100; //auto hit!
+		$fireOrder->updated = true;
     }
-	
-//and now actual damage dealing - and we already know fighter is hit (fire()) doesn't pass anything else)
-//source hex will be taken from firing unit, damage will be individually rolled for each fighter hit
- public function AOEdamage($target, $shooter, $fireOrder, $gamedata)
+
+    /**
+     * @param TacGamedata $gamedata
+     * @param FireOrder $fireOrder
+     */
+    public function fire($gamedata, $fireOrder)
+    { //sadly here it really has to be completely redefined... or at least I see no option to avoid this
+        $this->changeFiringMode($fireOrder->firingMode);//changing firing mode may cause other changes, too!
+        $shooter = $gamedata->getShipById($fireOrder->shooterid);
+
+        /** @var MovementOrder $movement */
+        $movement = $shooter->getLastTurnMovement($fireOrder->turn);
+
+        $posLaunch = $movement->position;//at moment of launch!!!
+
+        //sometimes player does manage to target ship after all..
+        if ($fireOrder->targetid != -1) {
+            $targetship = $gamedata->getShipById($fireOrder->targetid);
+            //insert correct target coordinates: last turns' target position
+            $movement = $targetship->getLastTurnMovement($fireOrder->turn);
+            $fireOrder->x = $movement->position->q;
+            $fireOrder->y = $movement->position->r;
+            $fireOrder->targetid = -1; //correct the error
+        }
+
+        $target = new OffsetCoordinate($fireOrder->x, $fireOrder->y);
+
+        //$this->calculateHit($gamedata, $fireOrder); //already calculated!
+
+        $rolled = Dice::d(100);
+        $fireOrder->rolled = $rolled;
+        if ($rolled > $fireOrder->needed) { //miss!
+            $fireOrder->pubnotes .= "Charge dissipates. ";
+        } else {//hit!
+            $fireOrder->shotshit++;
+/*            if ($rolled > 75) { //deviation!
+                $maxdis = $posLaunch->distanceTo($target);
+                $dis = Dice::d(6); //deviation distance
+                $dis = min($dis, floor($maxdis));
+                $direction = Dice::d(6)-1; //deviation direction
+
+                $target = $target->moveToDirection($direction, $dis);
+
+                $fireOrder->pubnotes .= " deviation from " . $fireOrder->x . ' ' . $fireOrder->y;
+                $fireOrder->x = $target->q;
+                $fireOrder->y = $target->r;
+                $fireOrder->pubnotes .= " to " . $fireOrder->x . ' ' . $fireOrder->y;
+                $fireOrder->pubnotes .= "Shot deviates $dis hexes. ";
+            } */
+
+            //do damage to ships in range...
+            $ships1 = $gamedata->getShipsInDistance($target);
+            $ships2 = $gamedata->getShipsInDistance($target, 1);
+            foreach ($ships2 as $targetShip) {
+                if (isset($ships1[$targetShip->id])) { //ship on target hex!
+                    $sourceHex = $posLaunch;
+                    $damage = $this->maxDamage;
+                } else { //ship at range 1!
+                    $sourceHex = $target;
+                    $damage = $this->minDamage;
+                }
+                $this->AOEdamage($targetShip, $shooter, $fireOrder, $sourceHex, $damage, $gamedata);
+            }
+        }
+
+        $fireOrder->rolled = max(1, $fireOrder->rolled);//Marks that fire order has been handled, just in case it wasn't marked yet!
+    } //endof function fire
+
+
+    public function AOEdamage($target, $shooter, $fireOrder, $sourceHex, $damage, $gamedata)
     {
         if ($target->isDestroyed()) return; //no point allocating
+        $damage = $this->getDamageMod($damage, $shooter, $target, $sourceHex, $gamedata);
+        $damage -= $target->getDamageMod($shooter, $sourceHex, $gamedata->turn, $this);
+        if ($target instanceof FighterFlight) {
             foreach ($target->systems as $fighter) {
                 if ($fighter == null || $fighter->isDestroyed()) {
                     continue;
                 }
-         //roll (and modify as appropriate) damage for this particular fighter:
-        $damage = $this->getDamage();
-//        $damage = $this->getDamageMod($damage, $shooter, $target, null, $gamedata);
-//        $damage -= $target->getDamageMod($shooter, null, $gamedata->turn, $this);
-
-                $this->doDamage($target, $shooter, $fighter, $damage, $fireOrder, null, $gamedata, false);
-
-		}
-	}
-
+                $this->doDamage($target, $shooter, $fighter, $damage, $fireOrder, $sourceHex, $gamedata, false);
+            }
+        } else {
+//            $tmpLocation = $target->getHitSectionPos(Mathlib::hexCoToPixel($sourceHex), $fireOrder->turn);
+//            $system = $target->getHitSystem($shooter, $fireOrder, $this, $gamedata, $tmpLocation);
+//            $this->doDamage($target, $shooter, $system, $damage, $fireOrder, null, $gamedata, false, $tmpLocation);
+        }
+    }
 
 
-
+    //Need to work within the e-mine rules that appear to be set at 
+    public function getDamageMod($damage, $shooter, $target, $sourceHex, $gamedata)
+    {
+        $modifiedDmg = parent::getDamageMod($damage, $shooter, $target, $sourceHex, $gamedata);
+        if ($target->Enormous) $modifiedDmg = floor($modifiedDmg / 2);
+        return $modifiedDmg;
+    }
 
 
         function __construct($armour, $maxhealth, $powerReq, $startArc, $endArc){
@@ -5435,10 +5502,10 @@ public function calculateHitBase($gamedata, $fireOrder)
             parent::__construct($armour, $maxhealth, $powerReq, $startArc, $endArc);
         }
         
-//    	public function getDamage($fireOrder){        return Dice::d(6, 1)+2;   }
-    	public function getDamage($fireOrder){        return 12;   }
-        public function setMinDamage(){     $this->minDamage = 12;      }
-        public function setMaxDamage(){     $this->maxDamage = 12;      }
+    	public function getDamage($fireOrder){        return Dice::d(6, 1)+2;   }
+//    	public function getDamage($fireOrder){        return 6;   }
+        public function setMinDamage(){     $this->minDamage = 0;      }
+        public function setMaxDamage(){     $this->maxDamage = 8;      }
 }//endof PlasmaBlast
 
 
@@ -5828,7 +5895,10 @@ matter cannon and the second breaks up before impact to act like a blast cannon*
 				$movement = $shooter->getLastTurnMovement($fireOrder->turn);
 				$pos = mathlib::hexCoToPixel($movement->position); //launch hex
 				$sourceBearing = $interceptingShip->getBearingOnPos($pos);				
-			}else{ //direct fire
+			}else if ($firingWeapn->laser){
+			    $sourceBearing = $interceptingShip->getBearingOnUnit($shooter);
+			}
+			else{ //direct fire
 				$sourceBearing = $interceptingShip->getBearingOnUnit($shooter);
 			}
 			if (!mathlib::isInArc($sourceBearing, $this->startArc, $this->endArc)) return false;
