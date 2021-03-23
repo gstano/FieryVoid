@@ -22,8 +22,6 @@ class technicalTargetDrone extends BaseShip{
 		
 		$this->notes = "DO NOT USE, prone to change!";
 		
-		$this->addPrimarySystem(new Particleimpeder(2, 0, 0, 180, 360));
-		$this->addPrimarySystem(new Particleimpeder(2, 0, 0, 0, 180));
 		$this->addPrimarySystem(new Reactor(6, 35, 0, 0));
 		$this->addPrimarySystem(new CnC(1, 1, 0, 0));
 		$sensors = new Scanner(6, 23, 4, 20);
@@ -31,10 +29,10 @@ class technicalTargetDrone extends BaseShip{
 		$this->addFrontSystem($sensors);
 		$this->addPrimarySystem(new Engine(5, 20, 0, 20, 3));
 		$this->addPrimarySystem(new Hangar(6, 100));
-		$this->addPrimarySystem(new IonFieldGenerator(2, 0, 0, 0, 360));
-		$this->addPrimarySystem(new IonFieldGenerator(2, 0, 0, 0, 360));
-		$this->addPrimarySystem(new IonFieldGenerator(2, 0, 0, 0, 360));
-		$this->addPrimarySystem(new IonFieldGenerator(2, 0, 0, 0, 360));
+//		$this->addPrimarySystem(new IonFieldGenerator(2, 0, 0, 0, 360));
+//		$this->addPrimarySystem(new IonFieldGenerator(2, 0, 0, 0, 360));
+//		$this->addPrimarySystem(new IonFieldGenerator(2, 0, 0, 0, 360));
+//		$this->addPrimarySystem(new IonFieldGenerator(2, 0, 0, 0, 360));
 		
 		$this->addFrontSystem(new Thruster(4, 10, 0, 4, 1));
 		$this->addFrontSystem(new Thruster(4, 10, 0, 4, 1));
@@ -42,38 +40,13 @@ class technicalTargetDrone extends BaseShip{
 		
 		//new weapon showcase
 		
-		$this->addFrontSystem(new NexusHeavyPlasmaCharge(3, 9, 5, 270, 90));
-		$this->addFrontSystem(new NexusHeavyPlasmaCharge(3, 9, 5, 270, 90));
-		$this->addFrontSystem(new NexusHeavyPlasmaCharge(3, 9, 5, 270, 90));
-		$this->addFrontSystem(new NexusHeavyPlasmaCharge(3, 9, 5, 270, 90));
-		//$this->addFrontSystem(new PlasmaWaveTorpedo(3, 0, 0, 300, 60));
-		//$this->addFrontSystem(new StunBeam(2, 0, 0, 0, 360));
-		//$this->addFrontSystem(new StunBeam(2, 0, 0, 0, 360));
-		//$this->addFrontSystem(new ScatterGun(1, 0, 0, 270, 90));
+		$this->addFrontSystem(new AMissileRack(3, 6, 0, 270, 90));
+		$this->addFrontSystem(new AMissileRack(3, 6, 0, 270, 90));
+		$this->addFrontSystem(new AMissileRack(3, 6, 0, 270, 90));
+		$this->addFrontSystem(new PlasmaBlast(3, 4, 2, 0, 360));
+		$this->addFrontSystem(new PlasmaWeb(3, 4, 2, 270, 90));
 		
-		/*
-		$this->addFrontSystem(new AssaultLaser(3, 6, 4, 300, 60));
-		$this->addFrontSystem(new ImperialLaser(3, 8, 5, 300, 60));
-		$this->addFrontSystem(new ImperialLaser(3, 8, 5, 300, 60));
-		$this->addFrontSystem(new TwinArray(3, 6, 2, 240, 60));
-		$this->addFrontSystem(new TwinArray(3, 6, 2, 300, 120));
-		*/
-		
-		$this->addFrontSystem(new CustomERLightPBeam(3, 0, 0, 240, 120));
-		$this->addFrontSystem(new CustomBPALight(3, 0, 0, 240, 120));
-		$this->addFrontSystem(new CustomBPAMedium(3, 0, 0, 240, 120));
-		$this->addFrontSystem(new CustomBPAHeavy(3, 0, 0, 240, 120));
-		$this->addFrontSystem(new NexusKineticBoxLauncher(1, 0, 0, 270, 180));
-		$this->addFrontSystem(new NexusChaffLauncher(1, 0, 0, 0, 360));
-		
-		$this->addAftSystem(new CommDisruptor(3, 0, 0, 0, 360));
-		$this->addAftSystem(new CommJammer(3, 0, 0, 0, 360));		
-		$this->addAftSystem(new ImpCommJammer(3, 0, 0, 0, 360));
-		$this->addAftSystem(new SensorSpear(3, 0, 0, 0, 360));
-		$this->addAftSystem(new SensorSpike(3, 0, 0, 0, 360));		
-		$this->addAftSystem(new CombatLaser(3, 0, 0, 0, 360));	
-		$this->addAftSystem(new LaserCutter(3, 0, 0, 0, 360));
-		
+	
 		$this->addAftSystem(new Thruster(4, 10, 0, 3, 2));
 		$this->addAftSystem(new Thruster(4, 12, 0, 4, 2));
 		$this->addAftSystem(new Thruster(4, 10, 0, 3, 2));
@@ -93,7 +66,7 @@ class technicalTargetDrone extends BaseShip{
 		$this->addRightSystem(new TwinArray(3, 6, 2, 0, 180));
 		
 		//0:primary, 1:front, 2:rear, 3:left, 4:right;
-		$this->addFrontSystem(new Structure( 5, 1));
+		$this->addFrontSystem(new Structure( 5, 100));
 		$this->addAftSystem(new Structure( 5, 95));
 		$this->addLeftSystem(new Structure( 4, 98));
 		$this->addRightSystem(new Structure( 4, 98));
