@@ -466,7 +466,7 @@ for friendly units.*/
         public $freeinterceptspecial = true; //has own custom routine for deciding whether third party interception is legal
         public $loadingtime = 1;
 
-        public $output = 3;
+//        public $output = 3;
 		public $canInterceptUninterceptable = true;
 
 		public $range = 100; //let's put maximum range here, but generous one
@@ -487,22 +487,21 @@ for friendly units.*/
 
 		public function setSystemDataWindow($turn){
 			parent::setSystemDataWindow($turn);
-			$this->data["Special"] = "Defensive Flak: -15 to hit on arc with active Flak Cannon.";
-			$this->data["Special"] .= "<br>Can intercept lasers.";
-			$this->data["Special"] .= "<br>May intercept for friendly units. Must have friendly and enemy unit in arc and have friendly unit within 5 hexes.";
+			$this->data["Special"] = "Can intercept lasers.";
+			$this->data["Special"] .= "<br>May intercept for friendly units. Must have friendly and enemy unit in arc and have friendly unit within 5 hexes. Friendly intercept only engages individual shots.";
+			$this->data["Special"] .= "<br>If manually targeted in Intercept (I) mode, will intercept all fire from targeted ship, with usual intercept degredation, at the Flak Cannon-firing ship.";
+			$this->data["Special"] .= "<br>Offensiver, Anti-fighter mode (A) targets fighters only, but as a matter weapon doing damage in flash mode.";
 		}
 
 
 
 
 	
-	if (($this->firingMode) == 1) {
-
 		//hit chance always 100 - so it always hits and is correctly animated
 		public function calculateHitBase($gamedata, $fireOrder){
 
-////			switch($this->firingMode){
-////				case 1:
+			switch($this->firingMode){
+				case 1:
 
 				$fireOrder->needed = 100; //auto hit!
 				$fireOrder->updated = true;
@@ -536,22 +535,21 @@ for friendly units.*/
 					$fireOrder->y = $pos->r;
 					$fireOrder->targetid = -1; //correct the error
 
-////				break;
+				break;
 		
-////			case 2:
+			case 2:
 		
-////				parent::fire($gamedata, $fireOrder);
-////				break;
-		
-////			}
+				parent::calculateHitBase($gamedata, $fireOrder);
+				break;
+			}
 
-			}//endof function calculateHitBase
+		}//endof function calculateHitBase
+
 	   
-		public function fire($gamedata, $fireOrder)
-		{ //sadly here it really has to be completely redefined... or at least I see no option to avoid this
+		public function fire($gamedata, $fireOrder) { 
 
-////			switch($this->firingMode){
-////				case 1:
+			switch($this->firingMode){
+				case 1:
 
 					$this->changeFiringMode($fireOrder->firingMode);//changing firing mode may cause other changes, too!
 					$shooter = $gamedata->getShipById($fireOrder->shooterid);
@@ -562,24 +560,23 @@ for friendly units.*/
 					$rolled = Dice::d(100);
 					$fireOrder->rolled = $rolled; ///and auto-hit ;)
 					$fireOrder->shotshit++;
-					$fireOrder->pubnotes .= "Interception applied to all weapons at target hex that are firing at Chaff-launching ship. "; //just information for player, actual applying was done in calculateHitBase method
+					$fireOrder->pubnotes .= "Interception applied to all weapons on target unit that are firing at Flak Cannon-firing ship. "; //just information for player, actual applying was done in calculateHitBase method
 
 					$fireOrder->rolled = max(1, $fireOrder->rolled);//Marks that fire order has been handled, just in case it wasn't marked yet!
 					TacGamedata::$lastFiringResolutionNo++;    //note for further shots
 					$fireOrder->resolutionOrder = TacGamedata::$lastFiringResolutionNo;//mark order in which firing was handled!
 
-////					break;
+					break;
 				
-////				case 2:
+				case 2:
 				
-////					break;
-////			}
+					parent::fire($gamedata, $fireOrder);
+					break;
+			}
 
 		} //endof function fire
 			
 			
-	} //endif		
-
 
 
 
