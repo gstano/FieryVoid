@@ -4,11 +4,11 @@ class TechnicalTestbedFtr extends FighterFlight{
     function __construct($id, $userid, $name,  $slot){
         parent::__construct($id, $userid, $name,  $slot);
         
-		$this->pointCost = 150*6;
+		$this->pointCost = 1*6;
 		$this->faction = "Custom Ships";
 		$this->phpclass = "TechnicalTestbedFtr";
 		$this->shipClass = "Testbed Medium Fighters";
-		$this->imagePath = "img/ships/ShadowFighter.png";
+		$this->imagePath = "img/ships/WalkerMapmaker.png";
 	    
 		$this->isd = 2202;
 		$this->factionAge = 1; //1 - Young, 2 - Middleborn, 3 - Ancient, 4 - Primordial
@@ -42,8 +42,8 @@ class TechnicalTestbedFtr extends FighterFlight{
 			$armour = array(2, 2, 2, 2);
 			$fighter = new Fighter("TechnicalTestbedFtr", $armour, 10, $this->id);
 			$fighter->displayName = "Testbed Fighter";
-			$fighter->imagePath = "img/ships/ShadowFighter.png";
-			$fighter->iconPath = "img/ships/ShadowFighter_LARGE.png";
+			$fighter->imagePath = "img/ships/WalkerMapmaker.png";
+			$fighter->iconPath = "img/ships/WalkerMapmaker_large.png";
 			
 			
 			//ramming attack - no room to show it cleanly on Aft, Diffuser and Tendrils take a lot of room...			
