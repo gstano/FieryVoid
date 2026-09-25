@@ -1,16 +1,20 @@
 <?php
-class dewMineBtype4 extends Mine{
+class dewMineTirellC extends Mine{
     
     function __construct($id, $userid, $name,  $slot){
         parent::__construct($id, $userid, $name,  $slot);
         
-		$this->pointCost = 38;
-        $this->faction = "Nexus Brixadii Clans";
-        $this->phpclass = "dewMineBtype4";
+		$this->pointCost = 22;
+        $this->faction = "Nexus Makar Federation";
+        $this->phpclass = "dewMineTirellC";
         $this->imagePath = "img/ships/descariMine.png";
-        $this->shipClass = "Heavy Particle Projector DEW Mine (Improved)";
+        $this->shipClass = "Tirell-C DEW Mine";
 		$this->occurence = "common";
-        $this->isd = 2106;
+		$this->variantOf = "Tirell-B DEW Mine";
+        $this->isd = 2108;
+		$this->unofficial = true;
+ 
+        $this->notes = 'Has IFF System';  
         
         $this->forwardDefense = 12;
         $this->sideDefense = 12;
@@ -37,11 +41,11 @@ class dewMineBtype4 extends Mine{
         $this->addPrimarySystem(new OSATCnC(0, 1, 0, 0));
         $this->addPrimarySystem(new MagGravReactorTechnical(0, 1, 0, 2));
         $this->addPrimarySystem(new mineStealth(0, 1, 1));
-        $this->addPrimarySystem(new MineControllerDEW(0, 1, 0, 10, 5)); //$armour, $maxhealth, $powerReq, $startArc, $endArc, $range/output, $accuracy 
-        $this->addPrimarySystem(new HvyParticleProjector(0, 1, 0, 0, 360));
+        $this->addPrimarySystem(new MineControllerDEW(0, 1, 0, 6, 5)); //$armour, $maxhealth, $powerReq, $startArc, $endArc, $range/output, $accuracy 
+        $this->addPrimarySystem(new NexusLightXRayLaser(0, 1, 0, 0, 360));
         
         //0:primary, 1:front, 2:rear, 3:left, 4:right;
-        $this->addPrimarySystem(new Structure(2, 12));
+        $this->addPrimarySystem(new Structure(1, 5));
         
         	//d20 hit chart
         $this->hitChart = array(

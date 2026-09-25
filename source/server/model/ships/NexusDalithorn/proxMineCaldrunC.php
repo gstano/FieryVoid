@@ -1,20 +1,23 @@
 <?php
-class proxMineBShip1 extends Mine{
+class proxMineCaldrunC extends Mine{
     
     function __construct($id, $userid, $name,  $slot){
         parent::__construct($id, $userid, $name,  $slot);
         
-		$this->pointCost = 17;
-		$this->faction = "Nexus Brixadii Clans (early)";
-        $this->phpclass = "proxMineBShip1";
+		$this->pointCost = 11;
+		$this->faction = "Nexus Dalithorn Commonwealth";
+        $this->phpclass = "proxMineCaldrunC";
         $this->imagePath = "img/ships/eaMine.png";
-        $this->shipClass = "Type-1 Anti-Ship Proximity Mine";
+        $this->shipClass = "Caldrun-C Proximity Mine";
 		$this->occurence = "common";
-        $this->isd = 2027;
+        $this->isd = 2113;
+		$this->unofficial = true;
+ 
+        $this->notes = 'Has IFF System';  
         
         $this->forwardDefense = 12;
         $this->sideDefense = 12;
-        $this->signature = 2;        
+        $this->signature = 3;        
         
         $this->turncost = 0;
         $this->turndelaycost = 0;
@@ -37,7 +40,7 @@ class proxMineBShip1 extends Mine{
         $this->addPrimarySystem(new OSATCnC(0, 1, 0, 0));
         $this->addPrimarySystem(new MagGravReactorTechnical(0, 1, 0, 2));
         $this->addPrimarySystem(new mineStealth(0, 1, 1));
-        $this->addPrimarySystem(new ProximityMine(0, 1, 1, 0, 360, 1, 1, 0, 25)); //$armour, $maxhealth, $powerReq, $startArc, $endArc, $range, $diceType, $dice, $damageBonus 
+        $this->addPrimarySystem(new ProximityMine(0, 1, 1, 0, 360, 1, 1, 0, 15)); //$armour, $maxhealth, $powerReq, $startArc, $endArc, $range, $diceType, $dice, $damageBonus 
         
         //0:primary, 1:front, 2:rear, 3:left, 4:right;
         $this->addPrimarySystem(new Structure(0, 1));

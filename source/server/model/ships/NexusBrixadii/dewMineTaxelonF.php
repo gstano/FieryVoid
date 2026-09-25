@@ -1,21 +1,25 @@
 <?php
-class dewMineBtype3 extends Mine{
+class dewMineTaxelonF extends Mine{
     
     function __construct($id, $userid, $name,  $slot){
         parent::__construct($id, $userid, $name,  $slot);
         
-		$this->pointCost = 31;
-        $this->faction = "Nexus Brixadii Clans (early)";
-        $this->phpclass = "dewMineBtype3";
+		$this->pointCost = 41;
+        $this->faction = "Nexus Brixadii Clans";
+        $this->phpclass = "dewMineTaxelonF";
         $this->imagePath = "img/ships/descariMine.png";
-        $this->shipClass = "Heavy Particle Projector DEW Mine";
+        $this->shipClass = "Taxelon-F DEW Mine";
 		$this->occurence = "common";
-        $this->isd = 2048;
+		$this->variantOf = "Taxelon-D DEW Mine";
+        $this->isd = 2106;
+		$this->unofficial = true;
+ 
+        $this->notes = 'Has IFF System';  
         
         $this->forwardDefense = 12;
         $this->sideDefense = 12;
-        $this->signature = 2;
-        $this->detectedSignature = -1;           
+        $this->signature = 3;
+        $this->detectedSignature = 0;           
         
         $this->turncost = 0;
         $this->turndelaycost = 0;
@@ -37,7 +41,7 @@ class dewMineBtype3 extends Mine{
         $this->addPrimarySystem(new OSATCnC(0, 1, 0, 0));
         $this->addPrimarySystem(new MagGravReactorTechnical(0, 1, 0, 2));
         $this->addPrimarySystem(new mineStealth(0, 1, 1));
-        $this->addPrimarySystem(new MineControllerDEW(0, 1, 0, 9, 4)); //$armour, $maxhealth, $powerReq, $startArc, $endArc, $range/output, $accuracy 
+        $this->addPrimarySystem(new MineControllerDEW(0, 1, 0, 10, 5)); //$armour, $maxhealth, $powerReq, $startArc, $endArc, $range/output, $accuracy 
         $this->addPrimarySystem(new HvyParticleProjector(0, 1, 0, 0, 360));
         
         //0:primary, 1:front, 2:rear, 3:left, 4:right;

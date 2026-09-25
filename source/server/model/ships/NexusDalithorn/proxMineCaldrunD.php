@@ -1,21 +1,24 @@
 <?php
-class dewMineBtype2 extends Mine{
+class proxMineCaldrunD extends Mine{
     
     function __construct($id, $userid, $name,  $slot){
         parent::__construct($id, $userid, $name,  $slot);
         
-		$this->pointCost = 18;
-        $this->faction = "Nexus Brixadii Clans (early)";
-        $this->phpclass = "dewMineBtype2";
-        $this->imagePath = "img/ships/descariMine.png";
-        $this->shipClass = "Particle Bolter DEW Mine";
+		$this->pointCost = 19;
+		$this->faction = "Nexus Dalithorn Commonwealth";
+        $this->phpclass = "proxMineCaldrunD";
+        $this->imagePath = "img/ships/eaMine.png";
+        $this->shipClass = "Caldrun-D Proximity Mine";
 		$this->occurence = "common";
-        $this->isd = 2031;
+		$this->variantOf = "Caldrun-C Proximity Mine";
+        $this->isd = 2113;
+		$this->unofficial = true;
+ 
+        $this->notes = 'Has IFF System';  
         
         $this->forwardDefense = 12;
         $this->sideDefense = 12;
-        $this->signature = 2;
-        $this->detectedSignature = -1;           
+        $this->signature = 3;        
         
         $this->turncost = 0;
         $this->turndelaycost = 0;
@@ -23,7 +26,8 @@ class dewMineBtype2 extends Mine{
         $this->rollcost = 0;
         $this->pivotcost = 0;	
         $this->iniativebonus = -200; 
-        $this->mineType = 'DEW';         
+        $this->mineType = 'Proximity';         
+        $this->IFFSystem = true;            
        		    	    	    	    
         //Block all enhancements for Mine units when bought
 		Enhancements::nonstandardEnhancementSet($this, 'Mines');	 
@@ -37,11 +41,10 @@ class dewMineBtype2 extends Mine{
         $this->addPrimarySystem(new OSATCnC(0, 1, 0, 0));
         $this->addPrimarySystem(new MagGravReactorTechnical(0, 1, 0, 2));
         $this->addPrimarySystem(new mineStealth(0, 1, 1));
-        $this->addPrimarySystem(new MineControllerDEW(0, 1, 0, 6, 4)); //$armour, $maxhealth, $powerReq, $startArc, $endArc, $range/output, $accuracy 
-        $this->addPrimarySystem(new NexusParticleBolter(0, 1, 0, 0, 360));
+        $this->addPrimarySystem(new ProximityMine(0, 1, 1, 0, 360, 1, 1, 0, 30)); //$armour, $maxhealth, $powerReq, $startArc, $endArc, $range, $diceType, $dice, $damageBonus 
         
         //0:primary, 1:front, 2:rear, 3:left, 4:right;
-        $this->addPrimarySystem(new Structure(1, 7));
+        $this->addPrimarySystem(new Structure(0, 1));
         
         	//d20 hit chart
         $this->hitChart = array(
