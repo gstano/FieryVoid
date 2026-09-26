@@ -7,7 +7,7 @@ class DalithornTransportCutter extends FighterFlight{
         $this->pointCost = 25*6;
         $this->faction = "Nexus Support Units";
         $this->phpclass = "DalithornTransportCutter";
-        $this->shipClass = "Dalithorn Transport Cutter";
+        $this->shipClass = "Dalithorn Orvast Transport Cutter";
         $this->imagePath = "img/ships/Nexus/Dalithorn_Cutter2.png";
 		$this->unofficial = true;
 	    $this->isd = 1893;
