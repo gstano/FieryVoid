@@ -57,7 +57,7 @@ class VelraxSoressPDCRefit extends FighterFlight{
 
 			$fighter->addFrontSystem(new AmmoFighterRack(330, 30, $ammoMagazine, false)); //$startArc, $endArc, $magazine, $base
 
-            $frontGun = new NexusLightIonBolter(300, 60, 0);
+            $frontGun = new NexusLightIonBolter(270, 90, 0);
             $frontGun->displayName = "Light Ion Gun";
             $fighter->addFrontSystem($frontGun);
 
