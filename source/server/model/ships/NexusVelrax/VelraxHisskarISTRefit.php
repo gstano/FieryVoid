@@ -1,16 +1,18 @@
 <?php
-class VelraxHisskarIST extends FighterFlight{
+class VelraxHisskarISTRefit extends FighterFlight{
     
     function __construct($id, $userid, $name,  $slot){
         parent::__construct($id, $userid, $name,  $slot);
         
-        $this->pointCost = 35*6;
+        $this->pointCost = 41*6;
         $this->faction = "Nexus Support Units";
-        $this->phpclass = "VelraxHisskarIST";
-        $this->shipClass = "Velrax Hisskar Intra-System Transport";
+        $this->phpclass = "VelraxHisskarISTRefit";
+        $this->shipClass = "Velrax Hisskar Intra-System Transport (2119)";
+			$this->variantOf = "Velrax Hisskar Intra-System Transport";
+			$this->occurence = "common";
         $this->imagePath = "img/ships/Nexus/velraxHisskar.png";
 		$this->unofficial = true;
-	    $this->isd = 1999;
+	    $this->isd = 2119;
         $this->canvasSize = 120;
 
 //        $this->notes = 'Needs updated hangars to handle.';
@@ -18,7 +20,7 @@ class VelraxHisskarIST extends FighterFlight{
 
         $this->forwardDefense = 9;
         $this->sideDefense = 11;
-        $this->freethrust = 4;
+        $this->freethrust = 5;
         $this->offensivebonus = 2;
         $this->jinkinglimit = 0;
         $this->turncost = 0.33;
@@ -42,12 +44,12 @@ class VelraxHisskarIST extends FighterFlight{
 		
 		for ($i = 0; $i < $toAdd; $i++) {
 			$armour = array(2, 2, 1, 1);
-			$fighter = new Fighter("VelraxHisskarIST", $armour, 34, $this->id);
+			$fighter = new Fighter("VelraxHisskarISTRefit", $armour, 34, $this->id);
 			$fighter->displayName = "Hisskar";
 			$fighter->imagePath = "img/ships/Nexus/velraxHisskar.png.png";
 			$fighter->iconPath = "img/ships/Nexus/velraxHisskar_large.png";
 
-	        $light = new NexusLightIonGun(0, 360, 0, 1); //$startArc, $endArc, $nrOfShots
+	        $light = new NexusLightIonBolter(0, 360, 0, 1); //$startArc, $endArc, $nrOfShots
 	        $fighter->addFrontSystem($light);
         
 			$fighter->addAftSystem(new RammingAttack(0, 0, 360, $fighter->getRammingFactor(), 0)); //ramming attack
