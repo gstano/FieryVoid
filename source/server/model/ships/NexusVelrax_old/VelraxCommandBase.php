@@ -9,7 +9,7 @@ class VelraxCommandBase extends SmallStarBaseFourSections{
 		$this->smallBase = true;
 		$this->faction = "Nexus Velrax Republic (early)";
 		$this->phpclass = "VelraxCommandBase";
-		$this->shipClass = "Command Base";
+		$this->shipClass = "Toreshk Command Base";
 		$this->imagePath = "img/ships/Nexus/velraxBase.png";
 		$this->canvasSize = 140; 
 		$this->unofficial = true;

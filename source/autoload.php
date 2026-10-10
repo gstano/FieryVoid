@@ -3650,6 +3650,8 @@ spl_autoload_register(
                 'velraxkareshassaultcarrier' => '/server/model/ships/NexusVelrax_old/VelraxKareshAssaultCarrier.php',
                 'velraxkareshassaultcarrierrefit' => '/server/model/ships/NexusVelrax_old/VelraxKareshAssaultCarrierRefit.php',
                 'velraxkareshassaultcarrierrefit2' => '/server/model/ships/NexusVelrax/VelraxKareshAssaultCarrierRefit2.php',
+                'velraxkarsissflightbase' => '/server/model/ships/NexusVelrax_old/VelraxKarsissFlightBase.php',
+                'velraxkarsissflightbaserefit' => '/server/model/ships/NexusVelrax/VelraxKarsissFlightBaseRefit.php',
                 'velraxkrissithfreighter' => '/server/model/ships/NexusVelrax_old/VelraxKrissithFreighter.php',
                 'velraxkrissithfreighterrefit' => '/server/model/ships/NexusVelrax/VelraxKrissithFreighterRefit.php',
                 'velraxlasergunboat' => '/server/model/ships/NexusVelrax_old/VelraxLaserGunboat.php',

@@ -23,6 +23,7 @@ class VelraxSoressPDC extends FighterFlight{
         $this->jinkinglimit = 0;
         $this->turncost = 0.33;
         $this->turndelaycost = 0.33;
+		$this->unitSize = 1/6;
 		
 		$this->hangarRequired = "superheavy"; //Velrax Hisskar are housed in regular hangars, as heavy fighters
 //		$this->unitSize = 0.5; //one craft requires 2 hangar slots
